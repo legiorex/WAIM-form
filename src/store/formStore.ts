@@ -33,8 +33,10 @@ export interface FormState {
   step2: Step2Data;
   step3: Step3Data;
   validation: ValidationStep;
+  isLoading: boolean;
 
   setCurrentStep: (step: number) => void;
+  setIsLoading: (isLoading: boolean) => void;
 
   updateStep1: (data: Partial<Step1Data>) => void;
   updateStep2: (data: Partial<Step2Data>) => void;
@@ -71,6 +73,7 @@ const initValue = {
     isValidStep2: false,
     isValidStep3: false,
   },
+  isLoading: false,
 };
 
 export const useFormStore = create<FormState>()(
@@ -80,6 +83,8 @@ export const useFormStore = create<FormState>()(
         ...initValue,
 
         setCurrentStep: (step) => set({ currentStep: step }),
+
+        setIsLoading: (isLoading) => set({ isLoading }),
 
         updateStep1: (data) =>
           set((state) => ({

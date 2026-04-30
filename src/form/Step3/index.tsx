@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { z } from "zod/v4";
 import { useAddProduct } from "../../api/config/hooks/products";
 import { useFormStore } from "../../store/formStore";
+import { openResultModal } from "../ResultModal";
 import {
   LOAN_AMOUNT_STEP,
   LOAN_DAYS_STEP,
@@ -44,6 +45,7 @@ export const Step3 = () => {
   const step3 = useFormStore((state) => state.step3);
   const updateStep3 = useFormStore((state) => state.updateStep3);
   const updateValidation = useFormStore((state) => state.updateValidation);
+  const setIsLoading = useFormStore((state) => state.setIsLoading);
 
   const { mutate: addProduct } = useAddProduct();
 
@@ -65,6 +67,7 @@ export const Step3 = () => {
   }, [isValid, updateValidation]);
 
   const handleSubmit = (values: Step3FormValues) => {
+    setIsLoading(true);
     updateStep3({ ...values, loanAmount: String(values.loanAmount) });
 
     const data = {
@@ -73,7 +76,15 @@ export const Step3 = () => {
       ...values,
       title: "Займ",
     };
-    addProduct({ data });
+    addProduct(
+      { data },
+      {
+        onSettled: () => {
+          setIsLoading(false);
+          openResultModal();
+        },
+      },
+    );
   };
 
   return (

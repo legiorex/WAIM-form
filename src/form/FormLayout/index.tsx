@@ -17,6 +17,7 @@ export const FormLayout = () => {
   console.log("currentStep", currentStep);
   const setCurrentStep = useFormStore((state) => state.setCurrentStep);
   const validationStep = useFormStore((state) => state.validation);
+  const isLoading = useFormStore((state) => state.isLoading);
   // const step1 = useFormStore((state) => state.step1);
   // const step2 = useFormStore((state) => state.step2);
   // const step3 = useFormStore((state) => state.step3);
@@ -72,6 +73,7 @@ export const FormLayout = () => {
           <Button onClick={handlePrevious}>Предыдущий шаг</Button>
         )}
         <Button
+          loading={isLoading}
           onClick={onSubmitNext}
           disabled={!validationStep[`isValidStep${currentStep}`]}
         >
