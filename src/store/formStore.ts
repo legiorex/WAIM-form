@@ -23,7 +23,7 @@ export interface Step2Data {
 }
 
 export interface Step3Data {
-  loanAmount: number;
+  loanAmount: string;
   loanDays: number;
 }
 
@@ -57,8 +57,7 @@ const initialStep2: Step2Data = {
 };
 
 const initialStep3: Step3Data = {
-  // loanAmount: BigInt(200),
-  loanAmount: 200,
+  loanAmount: "20000",
   loanDays: 10,
 };
 
