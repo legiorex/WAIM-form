@@ -1,6 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router";
 import { FormLayout } from "../form/FormLayout";
-import { Review } from "../form/Review";
 import { Step1 } from "../form/Step1";
 import { Step2 } from "../form/Step2";
 import { Step3 } from "../form/Step3";
@@ -27,10 +26,6 @@ const router = createBrowserRouter([
       {
         path: PATHS.step3.path,
         element: <Step3 />,
-      },
-      {
-        path: PATHS.review.path,
-        element: <Review />,
       },
     ],
   },

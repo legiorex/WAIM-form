@@ -1,7 +1,6 @@
 import { Button, Flex } from "@mantine/core";
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
-// import { useAddProduct } from "../../api/config/hooks/products";
 import PATHS from "../../routes/patch";
 import { useFormStore } from "../../store/formStore";
 
@@ -9,7 +8,6 @@ const pathToStep: Record<string, number> = {
   [PATHS.step1.path]: 1,
   [PATHS.step2.path]: 2,
   [PATHS.step3.path]: 3,
-  [PATHS.review.path]: 4,
 };
 
 export const FormLayout = () => {
@@ -18,9 +16,7 @@ export const FormLayout = () => {
   const setCurrentStep = useFormStore((state) => state.setCurrentStep);
   const validationStep = useFormStore((state) => state.validation);
   const isLoading = useFormStore((state) => state.isLoading);
-  // const step1 = useFormStore((state) => state.step1);
-  // const step2 = useFormStore((state) => state.step2);
-  // const step3 = useFormStore((state) => state.step3);
+  const resetForm = useFormStore((state) => state.resetForm);
 
   const isLastStep = currentStep === 3;
 
@@ -34,14 +30,6 @@ export const FormLayout = () => {
     }
   }, [location.pathname, currentStep, setCurrentStep]);
 
-  // const { trigger: addProduct } = useAddProduct();
-
-  // const onSubmit = () => {
-  //   console.log("step1", step1);
-  //   console.log("step2", step2);
-  //   console.log("step3", step3);
-  // };
-
   const onSubmitNext = () => {
     const formId = `step-${currentStep}-form`;
     const form = document.getElementById(formId) as HTMLFormElement;
@@ -50,13 +38,6 @@ export const FormLayout = () => {
       form.requestSubmit();
     }
   };
-  // const handleNext = () => {
-  //   if (isLastStep) {
-  //     onSubmit();
-  //     return;
-  //   }
-  //   onSubmitNext();
-  // };
 
   const handlePrevious = () => {
     const previousStep = currentStep - 1;
@@ -64,21 +45,31 @@ export const FormLayout = () => {
     navigate(PATHS[`step${previousStep}`].path);
   };
 
+  const handleReset = () => {
+    resetForm();
+    navigate(PATHS.step1.path);
+  };
+
   return (
     <div>
       <Outlet />
 
-      <Flex justify="flex-end" mt="xl">
-        {currentStep > 1 && (
-          <Button onClick={handlePrevious}>Предыдущий шаг</Button>
-        )}
-        <Button
-          loading={isLoading}
-          onClick={onSubmitNext}
-          disabled={!validationStep[`isValidStep${currentStep}`]}
-        >
-          {isLastStep ? "Отправить заявку" : "Следующий шаг"}
+      <Flex justify="space-between" mt="xl">
+        <Button variant="outline" color="red" onClick={handleReset}>
+          Сбросить форму
         </Button>
+        <Flex gap="md">
+          {currentStep > 1 && (
+            <Button onClick={handlePrevious}>Предыдущий шаг</Button>
+          )}
+          <Button
+            loading={isLoading}
+            onClick={onSubmitNext}
+            disabled={!validationStep[`isValidStep${currentStep}`]}
+          >
+            {isLastStep ? "Отправить заявку" : "Следующий шаг"}
+          </Button>
+        </Flex>
       </Flex>
     </div>
   );
