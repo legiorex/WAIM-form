@@ -51,9 +51,7 @@ export const FormLayout = () => {
         )}
         <Button
           onClick={handleNext}
-          disabled={
-            currentStep === 3 || !validationStep[`isValidStep${currentStep}`]
-          }
+          disabled={!validationStep[`isValidStep${currentStep}`]}
         >
           Следующий шаг
         </Button>
