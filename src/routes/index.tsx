@@ -4,6 +4,7 @@ import { Review } from "../form/Review";
 import { Step1 } from "../form/Step1";
 import { Step2 } from "../form/Step2";
 import { Step3 } from "../form/Step3";
+import { NotFound } from "../pages/NotFound";
 import PATHS from "./patch";
 
 const router = createBrowserRouter([
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
         element: <Review />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 
