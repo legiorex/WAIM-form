@@ -32,10 +32,8 @@ type Step1FormValues = z.infer<typeof step1Schema>;
 export const Step1 = () => {
   const navigate = useNavigate();
 
-  // const { updateStep1, nextStep } = useFormStore();
   const step1 = useFormStore((state) => state.step1);
   const updateStep1 = useFormStore((state) => state.updateStep1);
-  // const validation = useFormStore((state) => state.validation);
   const updateValidation = useFormStore((state) => state.updateValidation);
 
   const form = useForm<Step1FormValues>({
@@ -51,18 +49,14 @@ export const Step1 = () => {
   });
 
   const isValid = form.isValid();
-  // const isDirty = form.isDirty();
 
   useEffect(() => {
-    console.log("isValid", isValid);
-    // console.log("isDirty", isDirty);
     updateValidation({
       isValidStep1: isValid,
     });
   }, [isValid, updateValidation]);
 
   const handleSubmit = (values: Step1FormValues) => {
-    console.log("handleSubmit", values);
     updateStep1(values);
     navigate("/step2");
   };
