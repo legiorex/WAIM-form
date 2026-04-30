@@ -1,12 +1,15 @@
-// import { useState } from "react";
+import { MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
 import { RouterProvider } from "react-router";
 import "./App.css";
 import router from "./routes";
 
 function App() {
-  // const [count, setCount] = useState(0);
-
-  return <RouterProvider router={router} />;
+  return (
+    <MantineProvider>
+      <RouterProvider router={router} />
+    </MantineProvider>
+  );
 }
 
 export default App;
