@@ -1,0 +1,113 @@
+openapi: 3.0.3
+info:
+  title: DummyJSON Products (Typed)
+  version: 1.0.0
+
+servers:
+  - url: https://dummyjson.com
+
+paths:
+  /products/category-list:
+    get:
+      summary: Get product category list
+      operationId: getProductsCategoryList
+      tags:
+        - products
+      responses:
+        '200':
+          description: Array of category slugs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryList'
+
+  /products/add:
+    post:
+      summary: Add a new product (mock)
+      operationId: addProduct
+      tags:
+        - products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddProductRequest'
+      responses:
+        '200':
+          description: Created product (mock response)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+components:
+  schemas:
+    CategoryList:
+      type: array
+      items:
+        type: string
+      example:
+        - beauty
+        - fragrances
+        - furniture
+        - groceries
+
+    AddProductRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        discountPercentage:
+          type: number
+        rating:
+          type: number
+        stock:
+          type: number
+        brand:
+          type: string
+        category:
+          type: string
+        thumbnail:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+
+    Product:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        discountPercentage:
+          type: number
+        rating:
+          type: number
+        stock:
+          type: number
+        brand:
+          type: string
+        category:
+          type: string
+        thumbnail:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
