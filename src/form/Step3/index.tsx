@@ -2,6 +2,7 @@ import { Slider, Stack, Text } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import { useEffect } from "react";
 import { z } from "zod/v4";
+import { useAddProduct } from "../../api/config/hooks/products";
 import { useFormStore } from "../../store/formStore";
 import {
   LOAN_AMOUNT_STEP,
@@ -38,9 +39,13 @@ const step3Schema = z.object({
 type Step3FormValues = z.infer<typeof step3Schema>;
 
 export const Step3 = () => {
+  const step1 = useFormStore((state) => state.step1);
+  const step2 = useFormStore((state) => state.step2);
   const step3 = useFormStore((state) => state.step3);
   const updateStep3 = useFormStore((state) => state.updateStep3);
   const updateValidation = useFormStore((state) => state.updateValidation);
+
+  const { mutate: addProduct } = useAddProduct();
 
   const form = useForm<Step3FormValues>({
     mode: "controlled",
@@ -59,15 +64,20 @@ export const Step3 = () => {
     });
   }, [isValid, updateValidation]);
 
-  useEffect(() => {
-    updateStep3({
-      loanAmount: String(form.values.loanAmount),
-      loanDays: form.values.loanDays,
-    });
-  }, [form.values, updateStep3]);
+  const handleSubmit = (values: Step3FormValues) => {
+    updateStep3({ ...values, loanAmount: String(values.loanAmount) });
+
+    const data = {
+      ...step1,
+      ...step2,
+      ...values,
+      title: "Займ",
+    };
+    addProduct({ data });
+  };
 
   return (
-    <form id="step-3-form">
+    <form id="step-3-form" onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="xl">
         <div>
           <Text size="sm" fw={500} mb="xs">
