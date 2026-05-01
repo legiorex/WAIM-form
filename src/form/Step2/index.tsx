@@ -1,4 +1,4 @@
-import { Select, Stack, TextInput } from "@mantine/core";
+import { Select, Stack, TextInput, Title } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
@@ -57,6 +57,9 @@ export const Step2 = () => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} id="step-2-form">
       <Stack gap="md">
+        <Title order={2} ta="center">
+          Место работы и адрес
+        </Title>
         <Select
           label="Место работы"
           placeholder="Выберите место работы"

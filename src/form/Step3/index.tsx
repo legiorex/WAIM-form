@@ -1,4 +1,4 @@
-import { Slider, Stack, Text } from "@mantine/core";
+import { Slider, Stack, Text, Title } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import { useEffect, useMemo } from "react";
 import { z } from "zod/v4";
@@ -112,6 +112,9 @@ export const Step3 = () => {
   return (
     <form id="step-3-form" onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="xl">
+        <Title order={2} ta="center">
+          Параметры займа
+        </Title>
         <div>
           <Text size="sm" fw={500} mb="xs">
             {loanAmount}

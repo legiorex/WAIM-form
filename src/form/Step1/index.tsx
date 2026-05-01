@@ -1,4 +1,4 @@
-import { Select, Stack, TextInput } from "@mantine/core";
+import { Select, Stack, TextInput, Title } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
@@ -64,6 +64,9 @@ export const Step1 = () => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} id="step-1-form">
       <Stack gap="md">
+        <Title order={2} ta="center">
+          Личные данные
+        </Title>
         <PhoneField
           value={form.values.phone}
           onChange={(value) => form.setFieldValue("phone", value)}
