@@ -1,4 +1,4 @@
-import { Button, Flex } from "@mantine/core";
+import { Button, Flex, Stack } from "@mantine/core";
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import {
@@ -50,7 +50,7 @@ export const FormLayout = () => {
   };
 
   return (
-    <div>
+    <Stack w={500} h={500} py="xl" justify="space-between">
       <Outlet />
 
       <Flex justify="space-between" mt="xl">
@@ -58,18 +58,16 @@ export const FormLayout = () => {
           Сбросить форму
         </Button>
         <Flex gap="md">
-          {currentStep > 1 && (
-            <Button onClick={handlePrevious}>Предыдущий шаг</Button>
-          )}
+          {currentStep > 1 && <Button onClick={handlePrevious}>Назад</Button>}
           <Button
             loading={isLoading}
             onClick={onSubmitNext}
             disabled={!validationStep[`isValidStep${currentStep}`]}
           >
-            {isLastStep ? "Отправить заявку" : "Следующий шаг"}
+            {isLastStep ? "Отправить заявку" : "Вперед"}
           </Button>
         </Flex>
       </Flex>
-    </div>
+    </Stack>
   );
 };

@@ -1,4 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router";
+import { PageWrapper } from "../components/PageWrapper";
 import { FormLayout } from "../form/FormLayout";
 import { Step1 } from "../form/Step1";
 import { Step2 } from "../form/Step2";
@@ -9,7 +10,11 @@ import PATHS from "./patch";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <FormLayout />,
+    element: (
+      <PageWrapper>
+        <FormLayout />
+      </PageWrapper>
+    ),
     children: [
       {
         index: true,
@@ -31,7 +36,11 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <NotFound />,
+    element: (
+      <PageWrapper>
+        <NotFound />
+      </PageWrapper>
+    ),
   },
 ]);
 

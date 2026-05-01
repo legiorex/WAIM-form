@@ -2,7 +2,6 @@ import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { ModalsProvider } from "@mantine/modals";
 import { RouterProvider } from "react-router";
-import "./App.css";
 import router from "./routes";
 
 function App() {
