@@ -34,14 +34,18 @@ export interface FormState {
   step3: Step3Data;
   validation: ValidationStep;
   isLoading: boolean;
+  isSuccess: boolean | null;
+  isModalOpened: boolean;
 
   setCurrentStep: (step: number) => void;
   setIsLoading: (isLoading: boolean) => void;
+  setIsSuccess: (isSuccess: boolean) => void;
 
   updateStep1: (data: Partial<Step1Data>) => void;
   updateStep2: (data: Partial<Step2Data>) => void;
   updateStep3: (data: Partial<Step3Data>) => void;
   updateValidation: (validation: Validator) => void;
+  toggleModalOpened: (flag: boolean) => void;
 
   resetForm: () => void;
 }
@@ -74,6 +78,8 @@ const initValue = {
     isValidStep3: false,
   },
   isLoading: false,
+  isSuccess: null,
+  isModalOpened: false,
 };
 
 export const useFormStore = create<FormState>()(
@@ -105,8 +111,13 @@ export const useFormStore = create<FormState>()(
           set((state) => ({
             validation: { ...state.validation, ...validation },
           })),
+        setIsSuccess: (isSuccess) => set({ isSuccess }),
+        toggleModalOpened: (flag) => set({ isModalOpened: flag }),
 
-        resetForm: () => set(initValue),
+        resetForm: () => {
+          set(initValue);
+          localStorage.removeItem("waim-form-storage");
+        },
       }),
       {
         name: "waim-form-storage",

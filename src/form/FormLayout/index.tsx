@@ -1,5 +1,5 @@
 import { Button, Flex, Stack } from "@mantine/core";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import {
   pathToStep,
@@ -7,6 +7,7 @@ import {
 } from "../../hooks/useFormValidationRedirect";
 import PATHS from "../../routes/patch";
 import { useFormStore } from "../../store/formStore";
+import { ResultModal } from "../ResultModal";
 
 export const FormLayout = () => {
   const currentStep = useFormStore((state) => state.currentStep);
@@ -49,25 +50,36 @@ export const FormLayout = () => {
     navigate(PATHS.step1.path);
   };
 
-  return (
-    <Stack w={500} h={500} py="xl" justify="space-between">
-      <Outlet />
+  const isDisabledSubmit = useMemo(() => {
+    if (isLastStep) {
+      return !Object.values(validationStep).every((value) => value);
+    }
 
-      <Flex justify="space-between" mt="xl">
-        <Button variant="outline" color="red" onClick={handleReset}>
-          Сбросить форму
-        </Button>
-        <Flex gap="md">
-          {currentStep > 1 && <Button onClick={handlePrevious}>Назад</Button>}
-          <Button
-            loading={isLoading}
-            onClick={onSubmitNext}
-            disabled={!validationStep[`isValidStep${currentStep}`]}
-          >
-            {isLastStep ? "Отправить заявку" : "Вперед"}
+    return !validationStep[`isValidStep${currentStep}`];
+  }, [validationStep, currentStep, isLastStep]);
+
+  return (
+    <>
+      <Stack w={500} h={500} py="xl" justify="space-between">
+        <Outlet />
+
+        <Flex justify="space-between" mt="xl">
+          <Button variant="outline" color="red" onClick={handleReset}>
+            Сбросить форму
           </Button>
+          <Flex gap="md">
+            {currentStep > 1 && <Button onClick={handlePrevious}>Назад</Button>}
+            <Button
+              loading={isLoading}
+              onClick={onSubmitNext}
+              disabled={isDisabledSubmit}
+            >
+              {isLastStep ? "Отправить заявку" : "Вперед"}
+            </Button>
+          </Flex>
         </Flex>
-      </Flex>
-    </Stack>
+      </Stack>
+      <ResultModal />
+    </>
   );
 };

@@ -4,7 +4,6 @@ import { useEffect, useMemo } from "react";
 import { z } from "zod/v4";
 import { useAddProduct } from "../../api/config/hooks/products";
 import { useFormStore } from "../../store/formStore";
-import { openResultModal } from "../ResultModal";
 import {
   LOAN_AMOUNT_STEP,
   LOAN_DAYS_STEP,
@@ -43,10 +42,11 @@ export const Step3 = () => {
   const step1 = useFormStore((state) => state.step1);
   const step2 = useFormStore((state) => state.step2);
   const step3 = useFormStore((state) => state.step3);
-  const isValidStep3 = useFormStore((state) => state.validation.isValidStep3);
   const updateStep3 = useFormStore((state) => state.updateStep3);
   const updateValidation = useFormStore((state) => state.updateValidation);
   const setIsLoading = useFormStore((state) => state.setIsLoading);
+  const setIsSuccess = useFormStore((state) => state.setIsSuccess);
+  const toggleModalOpened = useFormStore((state) => state.toggleModalOpened);
 
   const { mutate: addProduct } = useAddProduct();
 
@@ -64,15 +64,16 @@ export const Step3 = () => {
       loanDays: form.values.loanDays,
       loanAmount: String(form.values.loanAmount),
     });
-  }, [form.values.loanDays, form.values.loanAmount, updateStep3]);
-
-  useEffect(() => {
-    if (isValidStep3) return;
-    const isValid = form.isValid();
     updateValidation({
-      isValidStep3: isValid,
+      isValidStep3: form.isValid(),
     });
-  }, [form, isValidStep3, updateValidation]);
+  }, [
+    form.values.loanDays,
+    form.values.loanAmount,
+    form.isValid(),
+    updateValidation,
+    updateStep3,
+  ]);
 
   const handleSubmit = (values: Step3FormValues) => {
     setIsLoading(true);
@@ -88,7 +89,14 @@ export const Step3 = () => {
       {
         onSettled: () => {
           setIsLoading(false);
-          openResultModal();
+        },
+        onSuccess: () => {
+          setIsSuccess(true);
+          toggleModalOpened(true);
+        },
+        onError: () => {
+          setIsSuccess(false);
+          toggleModalOpened(true);
         },
       },
     );
@@ -101,6 +109,7 @@ export const Step3 = () => {
 
     return `Сумма займа: ${formatUSDWithSymbol(step3.loanAmount)}`;
   }, [step3.loanAmount]);
+
   const loanDays = useMemo(() => {
     if (!step3.loanDays) {
       return "Выберите срок займа";
@@ -110,39 +119,41 @@ export const Step3 = () => {
   }, [step3.loanDays]);
 
   return (
-    <form id="step-3-form" onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack gap="xl">
-        <Title order={2} ta="center">
-          Параметры займа
-        </Title>
-        <div>
-          <Text size="sm" fw={500} mb="xs">
-            {loanAmount}
-          </Text>
-          <Slider
-            min={Number(MIN_LOAN_AMOUNT)}
-            max={Number(MAX_LOAN_AMOUNT)}
-            step={Number(LOAN_AMOUNT_STEP)}
-            marks={marksLoanAmount}
-            key={form.key("loanAmount")}
-            {...form.getInputProps("loanAmount")}
-          />
-        </div>
+    <>
+      <form id="step-3-form" onSubmit={form.onSubmit(handleSubmit)}>
+        <Stack gap="xl">
+          <Title order={2} ta="center">
+            Параметры займа
+          </Title>
+          <div>
+            <Text size="sm" fw={500} mb="xs">
+              {loanAmount}
+            </Text>
+            <Slider
+              min={Number(MIN_LOAN_AMOUNT)}
+              max={Number(MAX_LOAN_AMOUNT)}
+              step={Number(LOAN_AMOUNT_STEP)}
+              marks={marksLoanAmount}
+              key={form.key("loanAmount")}
+              {...form.getInputProps("loanAmount")}
+            />
+          </div>
 
-        <div>
-          <Text size="sm" fw={500} mb="xs">
-            {loanDays}
-          </Text>
-          <Slider
-            min={MIN_LOAN_DAYS}
-            max={MAX_LOAN_DAYS}
-            step={LOAN_DAYS_STEP}
-            marks={marksLoanDays}
-            key={form.key("loanDays")}
-            {...form.getInputProps("loanDays")}
-          />
-        </div>
-      </Stack>
-    </form>
+          <div>
+            <Text size="sm" fw={500} mb="xs">
+              {loanDays}
+            </Text>
+            <Slider
+              min={MIN_LOAN_DAYS}
+              max={MAX_LOAN_DAYS}
+              step={LOAN_DAYS_STEP}
+              marks={marksLoanDays}
+              key={form.key("loanDays")}
+              {...form.getInputProps("loanDays")}
+            />
+          </div>
+        </Stack>
+      </form>
+    </>
   );
 };
