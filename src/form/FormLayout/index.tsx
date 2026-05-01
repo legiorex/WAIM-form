@@ -1,18 +1,15 @@
 import { Button, Flex } from "@mantine/core";
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
+import {
+  pathToStep,
+  useFormValidationRedirect,
+} from "../../hooks/useFormValidationRedirect";
 import PATHS from "../../routes/patch";
 import { useFormStore } from "../../store/formStore";
 
-const pathToStep: Record<string, number> = {
-  [PATHS.step1.path]: 1,
-  [PATHS.step2.path]: 2,
-  [PATHS.step3.path]: 3,
-};
-
 export const FormLayout = () => {
   const currentStep = useFormStore((state) => state.currentStep);
-  console.log("currentStep", currentStep);
   const setCurrentStep = useFormStore((state) => state.setCurrentStep);
   const validationStep = useFormStore((state) => state.validation);
   const isLoading = useFormStore((state) => state.isLoading);
@@ -22,6 +19,8 @@ export const FormLayout = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  useFormValidationRedirect();
 
   useEffect(() => {
     const stepFromPath = pathToStep[location.pathname];

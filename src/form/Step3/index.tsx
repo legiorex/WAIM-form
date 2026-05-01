@@ -1,6 +1,6 @@
 import { Slider, Stack, Text } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { z } from "zod/v4";
 import { useAddProduct } from "../../api/config/hooks/products";
 import { useFormStore } from "../../store/formStore";
@@ -43,6 +43,7 @@ export const Step3 = () => {
   const step1 = useFormStore((state) => state.step1);
   const step2 = useFormStore((state) => state.step2);
   const step3 = useFormStore((state) => state.step3);
+  const isValidStep3 = useFormStore((state) => state.validation.isValidStep3);
   const updateStep3 = useFormStore((state) => state.updateStep3);
   const updateValidation = useFormStore((state) => state.updateValidation);
   const setIsLoading = useFormStore((state) => state.setIsLoading);
@@ -58,17 +59,23 @@ export const Step3 = () => {
     validate: schemaResolver(step3Schema, { sync: true }),
   });
 
-  const isValid = form.isValid();
+  useEffect(() => {
+    updateStep3({
+      loanDays: form.values.loanDays,
+      loanAmount: String(form.values.loanAmount),
+    });
+  }, [form.values.loanDays, form.values.loanAmount, updateStep3]);
 
   useEffect(() => {
+    if (isValidStep3) return;
+    const isValid = form.isValid();
     updateValidation({
       isValidStep3: isValid,
     });
-  }, [isValid, updateValidation]);
+  }, [form, isValidStep3, updateValidation]);
 
   const handleSubmit = (values: Step3FormValues) => {
     setIsLoading(true);
-    updateStep3({ ...values, loanAmount: String(values.loanAmount) });
 
     const data = {
       ...step1,
@@ -87,12 +94,27 @@ export const Step3 = () => {
     );
   };
 
+  const loanAmount = useMemo(() => {
+    if (!step3.loanAmount) {
+      return "Выберите сумму займа";
+    }
+
+    return `Сумма займа: ${formatUSDWithSymbol(step3.loanAmount)}`;
+  }, [step3.loanAmount]);
+  const loanDays = useMemo(() => {
+    if (!step3.loanDays) {
+      return "Выберите срок займа";
+    }
+
+    return `Срок займа: ${step3.loanDays} дней`;
+  }, [step3.loanDays]);
+
   return (
     <form id="step-3-form" onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="xl">
         <div>
           <Text size="sm" fw={500} mb="xs">
-            Сумма займа: {formatUSDWithSymbol(step3.loanAmount)}
+            {loanAmount}
           </Text>
           <Slider
             min={Number(MIN_LOAN_AMOUNT)}
@@ -106,7 +128,7 @@ export const Step3 = () => {
 
         <div>
           <Text size="sm" fw={500} mb="xs">
-            Срок займа: {form.values.loanDays} дней
+            {loanDays}
           </Text>
           <Slider
             min={MIN_LOAN_DAYS}

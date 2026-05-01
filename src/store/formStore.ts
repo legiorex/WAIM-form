@@ -59,8 +59,8 @@ const initialStep2: Step2Data = {
 };
 
 const initialStep3: Step3Data = {
-  loanAmount: "20000",
-  loanDays: 10,
+  loanAmount: "",
+  loanDays: 0,
 };
 
 const initValue = {
