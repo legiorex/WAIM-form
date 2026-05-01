@@ -45,7 +45,7 @@ export const Step1 = () => {
       gender: step1.gender || undefined,
     },
     validate: schemaResolver(step1Schema, { sync: true }),
-    validateInputOnChange: true,
+    validateInputOnBlur: true,
   });
 
   const isValid = form.isValid();

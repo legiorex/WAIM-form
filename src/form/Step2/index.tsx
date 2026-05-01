@@ -38,7 +38,7 @@ export const Step2 = () => {
       address: step2.address,
     },
     validate: schemaResolver(step2Schema, { sync: true }),
-    validateInputOnChange: true,
+    validateInputOnBlur: true,
   });
 
   const isValid = form.isValid();
