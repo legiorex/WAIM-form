@@ -32,7 +32,7 @@ export const Step2 = () => {
   });
 
   const form = useForm<Step2FormValues>({
-    mode: "uncontrolled",
+    mode: "controlled",
     initialValues: {
       workplace: step2.workplace,
       address: step2.address,

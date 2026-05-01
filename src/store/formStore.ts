@@ -116,7 +116,7 @@ export const useFormStore = create<FormState>()(
 
         resetForm: () => {
           set(initValue);
-          localStorage.removeItem("waim-form-storage");
+          // localStorage.removeItem("waim-form-storage");
         },
       }),
       {
