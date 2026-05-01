@@ -1,73 +1,71 @@
-# React + TypeScript + Vite
+# WAIM Form
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Как запустить
 
-Currently, two official plugins are available:
+```bash
+# Установка зависимостей
+npm install
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+# Запуск в режиме разработки
+npm run dev
 
-## React Compiler
+# Сборка для продакшена
+npm run build
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# Предпросмотр продакшен сборки
+npm run preview
 
-## Expanding the ESLint configuration
+# Генерация API клиента
+npm run generate-api
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Линтинг кода
+npm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Технологический стек и подходы
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Все перечисленные ниже инструменты и подходы используются в моей работе в проде.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Генерация API
+
+Сгенерировал с помощью ИИ файл `src/api/config/doc.yaml`, так как сервис https://dummyjson.com не предоставляет документацию Swagger или OpenAPI.
+
+На реальном проекте такая документация бекенда будет, и генерация будет иметь ряд преимуществ:
+
+- **Единый источник правды** - бекенд, нет необходимости решать вопросы контрактов
+- **Настраиваем один раз** конфиг с axios (интерцепторы, авторизация и т.д.) и TanStack Query или SWR - получаем готовые типизированные хуки
+- **Ничего руками не пишем** - экономия времени на разработке
+
+## UI библиотека Mantine
+
+**CSS-first библиотека**. Нет CSS-in-JS - это имеет ряд преимуществ в производительности.
+
+Компоненты этой библиотеки легко и глубоко кастомизируются с помощью темы и SCSS модулей.
+
+**Богатая экосистема**: компоненты, хуки, графики и т.д. - хватает в большинстве кейсов.
+
+## Работа с денежными значениями
+
+Использовал библиотеку **bignumber.js** и денежные значения хранил в строках и минимальных неделимых значениях - в данном случае центах.
+
+Так используется во всех финтех приложениях, это позволяет сохранить точность.
+
+Этого не было в ТЗ, но я считаю это надо учитывать при разработке финтех приложения.
+
+## Валидация данных - Zod
+
+Использовал **Zod** для валидации данных форм с полной типизацией.
+
+## Управление состоянием - Zustand
+
+**Zustand** для хранения и управления данными форм с удобным сохранением и обновлением данных в localStorage.
+
+## React Router
+
+React Router добавлен согласно ТЗ, но в данном случае считаю это оверхед (обсудим на тех интервью).
+
+## Время разработки
+
+Время ушло примерно **4 часа** с учетом разворачивания архитектуры, роутинга, API и т.д.
+
+Если рассматривать только форму в готовой архитектуре - времени бы заняло сильно меньше.
